@@ -54,7 +54,7 @@ def verifypw(username,password):
     
     hashed_pw = users.find({
         "Username":username
-        })[0]["password"]
+        })[0]["Password"]
     
     if bcrypt.hashpw(password.encode('utf8'),hashed_pw)==hashed_pw:
         return True
@@ -92,7 +92,7 @@ def verifyCredentials(username,password):
     return None, False
 
 def updateAccount(username,balance):
-    users.update({
+    users.update_one({
         "Username":username
     },{
         "$set":{
@@ -101,10 +101,10 @@ def updateAccount(username,balance):
     })
     
 def updateDebt(username,balance):
-    users.update({
+    users.update_one({
         "Username":username
     },{
-        "$Set":{
+        "$set":{
             "Debt":balance
         }
     })
@@ -115,7 +115,7 @@ class Add(Resource):
         
         username = postedData["username"]
         password = postedData["password"]
-        money = postedData["Amount"]
+        money = postedData["amount"]
         
         retJson,error = verifyCredentials(username,password)
         
