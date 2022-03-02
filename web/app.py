@@ -8,12 +8,12 @@ import bcrypt
 app = Flask(__name__)
 api = Api(app)
 
-client = MongoClient("mongodb://db:27017")
+client = MongoClient("mongodb+srv://bankapi:bankapi@cluster0.fhsnx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
 db = client.BankAPI
 users = db["Users"]
 
 def UserExist(username):
-    if users.find({"Username":username}).count() == 0:
+    if users.count_documents({"Username":username})==0:#users.find({"Username":username}).count() == 0:
         return False
     else:
         return True
@@ -30,11 +30,11 @@ class Register(Resource):
                 "status":"301",
                 "msg": "Invalid Username"
             }
-        return jsonify(retJson)
+            return jsonify(retJson)
 
         hashed_pw = bcrypt.hashpw(password.encode('utf8'),bcrypt.gensalt())
         
-        users.insert({
+        users.insert_one({
             "Username":username,
             "Password":hashed_pw,
             "Own":0,
